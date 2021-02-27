@@ -1,0 +1,12 @@
+{
+    "files": [
+        {"filedir": "dir", "filename": "test.txt"}
+    ],
+    "repositories": [
+        "org/example"
+    ],
+    "source_branch": "main",
+    "dest_branch": "feat/test",
+    "msg": "feat: example",
+    "merge": false
+}
