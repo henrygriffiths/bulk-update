@@ -2,3 +2,10 @@ bin
 include
 lib
 lib64
+
+files
+!files/.keep
+repos
+!repos/.keep
+
+config.json
