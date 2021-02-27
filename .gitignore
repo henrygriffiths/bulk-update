@@ -3,9 +3,9 @@ include
 lib
 lib64
 
-files
+files/*
 !files/.keep
-repos
+repos/*
 !repos/.keep
 
 config.json
