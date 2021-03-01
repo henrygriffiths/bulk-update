@@ -8,5 +8,5 @@
     "source_branch": "main",
     "dest_branch": "feat/test",
     "msg": "feat: example",
-    "merge": false
+    "merge": "merge"
 }
