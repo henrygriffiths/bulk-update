@@ -69,7 +69,10 @@ for repository in config['repositories']:
     else:
         run(['git', 'push'])
     if config['existingbranch'] == False:
-        prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', config['dest_branch'], '-B', config['source_branch'], '-a', '@me', '-R', repository], returnoutput = True)
+        if config['merge'] == 'draft':
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', config['dest_branch'], '-B', config['source_branch'], '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+        else:
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', config['dest_branch'], '-B', config['source_branch'], '-a', '@me', '-R', repository], returnoutput = True)
         prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
         if config['merge'] == 'squash':
             run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
