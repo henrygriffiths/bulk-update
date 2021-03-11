@@ -1,6 +1,6 @@
 {
     "files": [
-        {"filedir": "dir", "filename": "test.txt"}
+        {"filedir": "dir", "filename": "test.txt", "action": "copy"}
     ],
     "repositories": [
         "org/example"

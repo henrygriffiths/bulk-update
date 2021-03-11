@@ -55,10 +55,13 @@ for repository in config['repositories']:
         run(['git', 'checkout', config['dest_branch']])
         run(['git', 'pull'])
     for f in config['files']:
-        f['filedir'] = f['filedir'].rstrip('/') + '/'
-        if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):
-            os.makedirs('{}/{}'.format(os.getcwd(), f['filedir']))
-        shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
+        if f['action'] == 'copy':
+            f['filedir'] = f['filedir'].rstrip('/') + '/'
+            if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):
+                os.makedirs('{}/{}'.format(os.getcwd(), f['filedir']))
+            shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
+        elif f['action'] == 'remove':
+            run(['rm', '-rf', f['filedir'] + f['filename']])
         run(['git', 'add', f['filedir'] + f['filename']])
     if config['existingbranch'] == False:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
