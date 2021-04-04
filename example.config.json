@@ -3,9 +3,8 @@
         {"filedir": "dir", "filename": "test.txt", "action": "copy"}
     ],
     "repositories": [
-        "org/example"
+        {"repository": "org/example", "source_branch": "main"}
     ],
-    "source_branch": "main",
     "dest_branch": "feat/test",
     "msg": "feat: example",
     "merge": "merge"
