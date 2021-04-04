@@ -62,6 +62,11 @@ for repository in config['repositories']:
             shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
         elif f['action'] == 'remove':
             run(['rm', '-rf', f['filedir'] + f['filename']])
+        elif f['action'] == 'edit':
+            f['filedir'] = f['filedir'].rstrip('/') + '/'
+            shutil.copyfile(f['filedir'] + f['filename'], '../../../files/' + f['filename'])
+            input('Hit Enter when done editing ')
+            shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
         run(['git', 'add', f['filedir'] + f['filename']])
     if config['existingbranch'] == False:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
