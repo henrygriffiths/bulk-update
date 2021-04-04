@@ -75,7 +75,7 @@ for repository_dict in config['repositories']:
     else:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify', '--allow-empty'])
     if config['existingbranch'] == False:
-        run(['git', 'push', '--set-upstream', 'origin', config['dest_branch']])
+        run(['git', 'push', '--set-upstream', 'origin', config['dest_branch'] + '-' + source_branch])
     else:
         run(['git', 'push'])
     if config['existingbranch'] == False:
