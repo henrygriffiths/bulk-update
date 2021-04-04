@@ -29,7 +29,9 @@ def run(args, returnoutput = False):
 
 
 os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
-for repository in config['repositories']:
+for repository_dict in config['repositories']:
+    repository = repository_dict['repository']
+    source_branch = repository_dict['source_branch']
     org = repository.split('/')[0]
     repo = repository.split('/')[1]
     if not os.path.exists('{}/{}'.format(os.getcwd(), org)):
@@ -39,15 +41,15 @@ for repository in config['repositories']:
         os.chdir('{}/{}'.format(os.getcwd(), repo))
         # run(['git', 'clean', '-fd'])
         run(['git', 'reset', '--hard', 'HEAD'])
-        # run(['git', 'checkout', 'origin/{}'.format(config['source_branch'])])
-        # run(['git', 'branch', '-D', config['source_branch']])
-        # run(['git', 'checkout', '-b', config['source_branch']])
+        # run(['git', 'checkout', 'origin/{}'.format(source_branch)])
+        # run(['git', 'branch', '-D', source_branch])
+        # run(['git', 'checkout', '-b', source_branch])
     else:
         run(['rm', '-rf', repo])
         run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
         os.chdir('{}/{}'.format(os.getcwd(), repo))
     run(['git', 'fetch'])
-    run(['git', 'checkout', config['source_branch']])
+    run(['git', 'checkout', source_branch])
     run(['git', 'pull'])
     if config['existingbranch'] == False:
         run(['git', 'checkout', '-b', config['dest_branch']])
