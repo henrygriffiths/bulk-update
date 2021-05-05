@@ -67,7 +67,7 @@ for repository_dict in config['repositories']:
         elif f['action'] == 'edit':
             f['filedir'] = f['filedir'].rstrip('/') + '/'
             shutil.copyfile(f['filedir'] + f['filename'], '../../../files/' + f['filename'])
-            input('Hit Enter when done editing ')
+            input('Hit Enter when done editing {} '.format(f['filename']))
             shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
         run(['git', 'add', f['filedir'] + f['filename']])
     if config['existingbranch'] == False:
