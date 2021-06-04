@@ -1,9 +1,9 @@
 {
     "files": [
-        {"filedir": "dir", "filename": "test.txt", "action": "copy"}
+        {"filedir": "dir", "filename": "test.txt", "action": "copy", "versioned": true}
     ],
     "repositories": [
-        {"repository": "org/example", "source_branch": "main"}
+        {"repository": "org/example", "source_branch": "main", "version": "v1"}
     ],
     "dest_branch": "feat/test",
     "msg": "feat: example",
