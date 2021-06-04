@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import json
 
-with open('config.json') as json_file:
+with open('config3.json') as json_file:
     config = json.load(json_file)
 
 
