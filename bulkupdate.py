@@ -32,6 +32,7 @@ os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
 for repository_dict in config['repositories']:
     repository = repository_dict['repository']
     source_branch = repository_dict['source_branch']
+    dest_branch = '{}-{}'.format(config['dest_branch'], source_branch)
     org = repository.split('/')[0]
     repo = repository.split('/')[1]
     if not os.path.exists('{}/{}'.format(os.getcwd(), org)):
@@ -52,36 +53,38 @@ for repository_dict in config['repositories']:
     run(['git', 'checkout', source_branch])
     run(['git', 'pull'])
     if config['existingbranch'] == False:
-        run(['git', 'checkout', '-b', '{}-{}'.format(config['dest_branch'], source_branch)])
+        run(['git', 'checkout', '-b', dest_branch])
     else:
-        run(['git', 'checkout', '{}-{}'.format(config['dest_branch'], source_branch)])
+        run(['git', 'checkout', dest_branch])
         run(['git', 'pull'])
     for f in config['files']:
         f['filedir'] = f['filedir'].rstrip('/')
+        local_filepath = '../../../files/{}'.format(f['filename'])
+        remote_filepath = '{}/{}'.format(f['filedir'], f['filename'])
         if f['action'] == 'copy':
             if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):
                 os.makedirs('{}/{}'.format(os.getcwd(), f['filedir']))
-            shutil.copyfile('../../../files/{}'.format(f['filename']), '{}/{}'.format(f['filedir'], f['filename']))
+            shutil.copyfile(local_filepath, remote_filepath)
         elif f['action'] == 'remove':
-            run(['rm', '-rf', '{}/{}'.format(f['filedir'], f['filename'])])
+            run(['rm', '-rf', remote_filepath])
         elif f['action'] == 'edit':
-            shutil.copyfile('{}/{}'.format(f['filedir'], f['filename']), '../../../files/{}'.format(f['filename']))
+            shutil.copyfile(remote_filepath, local_filepath)
             input('Hit Enter when done editing {} '.format(f['filename']))
-            shutil.copyfile('../../../files/{}'.format(f['filename']), '{}/{}'.format(f['filedir'], f['filename']))
-        run(['git', 'add', '{}/{}'.format(f['filedir'], f['filename'])])
+            shutil.copyfile(local_filepath, remote_filepath)
+        run(['git', 'add', remote_filepath])
     if config['existingbranch'] == False:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
     else:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify', '--allow-empty'])
     if config['existingbranch'] == False:
-        run(['git', 'push', '--set-upstream', 'origin', '{}-{}'.format(config['dest_branch'], source_branch)])
+        run(['git', 'push', '--set-upstream', 'origin', dest_branch])
     else:
         run(['git', 'push'])
     if config['existingbranch'] == False:
         if config['merge'] == 'draft':
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
         else:
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
         try:
             prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
             if config['merge'] == 'squash':
