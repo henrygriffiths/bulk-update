@@ -16,7 +16,7 @@ def run(args, returnoutput = False):
             return sp.stdout
         except:
             while True:
-                print('Running ' + ' '.join(args) + ' Failed.')
+                print('Running {} Failed.'.format(' '.join(args)))
                 result = input('(R)etry or (C)ontinue? : ')
                 if result.lower() == 'r':
                     break
@@ -52,37 +52,36 @@ for repository_dict in config['repositories']:
     run(['git', 'checkout', source_branch])
     run(['git', 'pull'])
     if config['existingbranch'] == False:
-        run(['git', 'checkout', '-b', config['dest_branch'] + '-' + source_branch])
+        run(['git', 'checkout', '-b', '{}-{}'.format(config['dest_branch'], source_branch)])
     else:
-        run(['git', 'checkout', config['dest_branch'] + '-' + source_branch])
+        run(['git', 'checkout', '{}-{}'.format(config['dest_branch'], source_branch)])
         run(['git', 'pull'])
     for f in config['files']:
+        f['filedir'] = f['filedir'].rstrip('/')
         if f['action'] == 'copy':
-            f['filedir'] = f['filedir'].rstrip('/') + '/'
             if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):
                 os.makedirs('{}/{}'.format(os.getcwd(), f['filedir']))
-            shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
+            shutil.copyfile('../../../files/{}'.format(f['filename']), '{}/{}'.format(f['filedir'], f['filename']))
         elif f['action'] == 'remove':
-            run(['rm', '-rf', f['filedir'] + f['filename']])
+            run(['rm', '-rf', '{}/{}'.format(f['filedir'], f['filename'])])
         elif f['action'] == 'edit':
-            f['filedir'] = f['filedir'].rstrip('/') + '/'
-            shutil.copyfile(f['filedir'] + f['filename'], '../../../files/' + f['filename'])
+            shutil.copyfile('{}/{}'.format(f['filedir'], f['filename']), '../../../files/{}'.format(f['filename']))
             input('Hit Enter when done editing {} '.format(f['filename']))
-            shutil.copyfile('../../../files/' + f['filename'], f['filedir'] + f['filename'])
-        run(['git', 'add', f['filedir'] + f['filename']])
+            shutil.copyfile('../../../files/{}'.format(f['filename']), '{}/{}'.format(f['filedir'], f['filename']))
+        run(['git', 'add', '{}/{}'.format(f['filedir'], f['filename'])])
     if config['existingbranch'] == False:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
     else:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify', '--allow-empty'])
     if config['existingbranch'] == False:
-        run(['git', 'push', '--set-upstream', 'origin', config['dest_branch'] + '-' + source_branch])
+        run(['git', 'push', '--set-upstream', 'origin', '{}-{}'.format(config['dest_branch'], source_branch)])
     else:
         run(['git', 'push'])
     if config['existingbranch'] == False:
         if config['merge'] == 'draft':
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', config['dest_branch'] + '-' + source_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
         else:
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', config['dest_branch'] + '-' + source_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
         prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
         if config['merge'] == 'squash':
             run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
