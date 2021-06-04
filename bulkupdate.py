@@ -59,7 +59,10 @@ for repository_dict in config['repositories']:
         run(['git', 'pull'])
     for f in config['files']:
         f['filedir'] = f['filedir'].rstrip('/')
-        local_filepath = '../../../files/{}'.format(f['filename'])
+        if f['versioned'] and 'version' in  repository_dict:
+            local_filepath = '../../../files/{}/{}'.format(repository_dict['version'], f['filename'])
+        else:
+            local_filepath = '../../../files/{}'.format(f['filename'])
         remote_filepath = '{}/{}'.format(f['filedir'], f['filename'])
         if f['action'] == 'copy':
             if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):

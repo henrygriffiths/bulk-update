@@ -3,8 +3,9 @@ include
 lib
 lib64
 
-files/*
-!files/.keep
+files/**
+!files/*/
+!files/*/.keep
 repos/*
 !repos/.keep
 
