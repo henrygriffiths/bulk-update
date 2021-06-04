@@ -82,12 +82,15 @@ for repository_dict in config['repositories']:
             prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
         else:
             prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', '{}-{}'.format(config['dest_branch'], source_branch), '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
-        prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-        if config['merge'] == 'squash':
-            run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
-        elif config['merge'] == 'autosquash':
-            run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
-        elif config['merge'] == 'skip':
+        try:
+            prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
+            if config['merge'] == 'squash':
+                run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
+            elif config['merge'] == 'autosquash':
+                run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
+            elif config['merge'] == 'skip':
+                pass
+        except:
             pass
     os.chdir('{}/../../'.format(os.getcwd()))
 os.chdir('{}/../'.format(os.getcwd()))
