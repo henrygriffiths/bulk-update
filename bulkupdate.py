@@ -74,6 +74,8 @@ for repository_dict in config['repositories']:
             shutil.copyfile(remote_filepath, local_filepath)
             input('Hit Enter when done editing {} '.format(f['filename']))
             shutil.copyfile(local_filepath, remote_filepath)
+        elif f['action'] == 'reset':
+            run(['git', 'checkout', 'origin/{}'.format(source_branch), remote_filepath])
         run(['git', 'add', remote_filepath])
     if config['existingbranch'] == False:
         run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
