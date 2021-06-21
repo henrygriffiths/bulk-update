@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import json
 
-with open('config3.json') as json_file:
+with open('config.json') as json_file:
     config = json.load(json_file)
 
 
@@ -71,7 +71,10 @@ for repository_dict in config['repositories']:
         elif f['action'] == 'remove':
             run(['rm', '-rf', remote_filepath])
         elif f['action'] == 'edit':
-            shutil.copyfile(remote_filepath, local_filepath)
+            try:
+                shutil.copyfile(remote_filepath, local_filepath)
+            except:
+                print('FAILED TO COPY FILE - DOES NOT EXIST')
             input('Hit Enter when done editing {} '.format(f['filename']))
             shutil.copyfile(local_filepath, remote_filepath)
         elif f['action'] == 'reset':
