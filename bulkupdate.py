@@ -85,9 +85,9 @@ for repository_dict in config['repositories']:
         run(['git', 'push'])
     if config['existingbranch'] == False:
         if config['merge'] == 'draft':
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
         else:
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', 'Created by HenryGriffiths/bulk-update', '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
         try:
             prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
             if config['merge'] == 'squash':
