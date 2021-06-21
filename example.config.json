@@ -8,5 +8,5 @@
     "dest_branch": "feat/test",
     "msg": "feat: example",
     "comment": "This PR fixes example issue",
-    "merge": "merge"
+    "pr": "merge"
 }
