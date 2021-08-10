@@ -49,6 +49,9 @@ for repository_dict in config['repositories']:
         run(['rm', '-rf', repo])
         run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
         os.chdir('{}/{}'.format(os.getcwd(), repo))
+    if 'repoprune' in config and config['repoprune'] == True:
+        run(['git', 'fetch', '--prune'])
+    else:
     run(['git', 'fetch'])
     run(['git', 'checkout', source_branch])
     run(['git', 'pull'])
