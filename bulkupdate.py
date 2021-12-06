@@ -91,21 +91,22 @@ for repository_dict in config['repositories']:
         run(['git', 'push', '--set-upstream', 'origin', dest_branch])
     else:
         run(['git', 'push'])
-    if config['existingbranch'] == False or config['createpr'] == True:
-        if config['merge'] == 'draft':
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
-        else:
-            prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
-        try:
-            prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-            if config['merge'] == 'squash':
-                run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
-            elif config['merge'] == 'autosquash':
-                run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
-            elif config['merge'] == 'skip':
+    if config['createpr'] == True:
+        if config['existingbranch'] == False:
+            if config['merge'] == 'draft':
+                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            else:
+                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+            try:
+                prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
+                if config['merge'] == 'squash':
+                    run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
+                elif config['merge'] == 'autosquash':
+                    run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
+                elif config['merge'] == 'skip':
+                    pass
+            except:
                 pass
-        except:
-            pass
     os.chdir('{}/../../'.format(os.getcwd()))
 os.chdir('{}/../'.format(os.getcwd()))
 
