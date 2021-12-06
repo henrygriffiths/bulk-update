@@ -52,7 +52,7 @@ for repository_dict in config['repositories']:
     if 'repoprune' in config and config['repoprune'] == True:
         run(['git', 'fetch', '--prune'])
     else:
-    run(['git', 'fetch'])
+        run(['git', 'fetch'])
     run(['git', 'checkout', source_branch])
     run(['git', 'pull'])
     if config['existingbranch'] == False:
