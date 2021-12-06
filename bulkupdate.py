@@ -92,17 +92,17 @@ for repository_dict in config['repositories']:
     else:
         run(['git', 'push'])
     if config['existingbranch'] == False:
-        if config['pr'] == 'draft':
+        if config['merge'] == 'draft':
             prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
         else:
             prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by HenryGriffiths/bulk-update'.format(config['comment']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
         try:
             prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-            if config['pr'] == 'squash':
+            if config['merge'] == 'squash':
                 run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
-            elif config['pr'] == 'autosquash':
+            elif config['merge'] == 'autosquash':
                 run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
-            elif config['pr'] == 'skip':
+            elif config['merge'] == 'skip':
                 pass
         except:
             pass
