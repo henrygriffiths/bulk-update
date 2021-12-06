@@ -9,4 +9,5 @@
     "msg": "feat: example",
     "comment": "This PR fixes example issue",
     "merge": "merge"
+    "repoprune": true
 }
