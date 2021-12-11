@@ -10,5 +10,6 @@
     "comment": "This PR fixes example issue",
     "createpr": true,
     "merge": "merge",
-    "repoprune": true
+    "repoprune": true,
+    "shallowclone": true
 }
