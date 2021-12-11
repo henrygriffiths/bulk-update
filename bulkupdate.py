@@ -47,7 +47,10 @@ for repository_dict in config['repositories']:
         # run(['git', 'checkout', '-b', source_branch])
     else:
         run(['rm', '-rf', repo])
-        run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
+        if config['shallowclone'] == True:
+            run(['git', 'clone', '--depth', '1', 'https://github.com/{}/{}.git'.format(org, repo)])
+        else:
+            run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
         os.chdir('{}/{}'.format(os.getcwd(), repo))
     if 'repoprune' in config and config['repoprune'] == True:
         run(['git', 'fetch', '--prune'])
