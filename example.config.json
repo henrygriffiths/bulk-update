@@ -11,5 +11,7 @@
     "createpr": true,
     "merge": "merge",
     "repoprune": true,
-    "shallowclone": true
+    "shallowclone": true,
+    "review_user": "",
+    "review_token": ""
 }
