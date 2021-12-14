@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import json
 
-with open('config.json') as json_file:
+with open('config6.json') as json_file:
     config = json.load(json_file)
 
 
@@ -52,6 +52,8 @@ for repository_dict in config['repositories']:
         else:
             run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
         os.chdir('{}/{}'.format(os.getcwd(), repo))
+    if config['shallowclone'] == True:
+        run(['git', 'config', '--add', 'remote.origin.fetch', '+refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
     if 'repoprune' in config and config['repoprune'] == True:
         run(['git', 'fetch', '--prune'])
     else:
@@ -110,6 +112,9 @@ for repository_dict in config['repositories']:
                     pass
             except:
                 pass
+    if config['shallowclone'] == True and config['repoprune'] == True:
+        run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
+        run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
     os.chdir('{}/../../'.format(os.getcwd()))
 os.chdir('{}/../'.format(os.getcwd()))
 
