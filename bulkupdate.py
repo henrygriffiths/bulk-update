@@ -52,7 +52,7 @@ for repository_dict in config['repositories']:
         else:
             run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
         os.chdir('{}/{}'.format(os.getcwd(), repo))
-    if config['shallowclone'] == True:
+    if config['shallowclone'] == True and config['existingbranch'] == True:
         run(['git', 'config', '--add', 'remote.origin.fetch', '+refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
     if 'repoprune' in config and config['repoprune'] == True:
         run(['git', 'fetch', '--prune'])
@@ -114,7 +114,7 @@ for repository_dict in config['repositories']:
                     pass
             except:
                 pass
-    if config['shallowclone'] == True and config['repoprune'] == True:
+    if config['shallowclone'] == True and config['repoprune'] == True and config['existingbranch'] == True:
         run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
         run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
     os.chdir('{}/../../'.format(os.getcwd()))
