@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import json
+import requests
 
 with open('config.json') as json_file:
     config = json.load(json_file)
@@ -109,7 +110,7 @@ for repository_dict in config['repositories']:
                 elif config['merge'] == 'autosquash':
                     run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
                     if 'review_user' in config and 'review_token' in config:
-                        run(['curl', '-u', '{}:{}'.format(config['review_user'], config['review_token']), '-X', 'POST', '-H', '"Accept: application/vnd.github.v3+json"', '-s', 'https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), '-d', '"{\\\"event\\\": \\\"APPROVE\\\"}"'])
+                        requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
                 elif config['merge'] == 'skip':
                     pass
             except:
