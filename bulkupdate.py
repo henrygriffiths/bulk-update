@@ -66,6 +66,8 @@ for repository_dict in config['repositories']:
     else:
         run(['git', 'checkout', dest_branch])
         run(['git', 'pull'])
+        if config['updatebranch'] == True:
+            run(['git', 'merge', source_branch, '-S', '-m', 'Merge branch \'{}\' into {}'.format(source_branch, dest_branch)])
     for f in config['files']:
         f['filedir'] = f['filedir'].rstrip('/')
         if f['versioned'] and 'version' in  repository_dict:

@@ -9,6 +9,7 @@
     "msg": "feat: example",
     "comment": "This PR fixes example issue",
     "createpr": true,
+    "updatebranch": false,
     "merge": "merge",
     "repoprune": true,
     "shallowclone": true,
