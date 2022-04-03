@@ -4,6 +4,7 @@ import subprocess
 import json
 import requests
 import sys
+import time
 
 if len(sys.argv) > 1:
     configfilename = sys.argv[1]
@@ -13,6 +14,8 @@ else:
 with open(configfilename) as json_file:
     config = json.load(json_file)
 
+sleeptime = 5*60
+first = True
 
 def run(args, returnoutput = False):
     while True:
@@ -37,6 +40,11 @@ def run(args, returnoutput = False):
 
 os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
 for repository_dict in config['repositories']:
+    if not first:
+        print('Sleeping')
+        time.sleep(sleeptime)
+    else:
+        first = False
     repository = repository_dict['repository']
     source_branch = repository_dict['source_branch']
     dest_branch = '{}-{}'.format(config['dest_branch'], source_branch)
