@@ -3,8 +3,14 @@ import shutil
 import subprocess
 import json
 import requests
+import sys
 
-with open('config.json') as json_file:
+if len(sys.argv) > 1:
+    configfilename = sys.argv[1]
+else:
+    configfilename = 'config.json'
+
+with open(configfilename) as json_file:
     config = json.load(json_file)
 
 
