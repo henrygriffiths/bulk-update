@@ -12,6 +12,7 @@
     "existingbranch": false,
     "updatebranch": false,
     "merge": "merge",
+    "mergenow": true,
     "repoprune": true,
     "shallowclone": true,
     "review_user": "",
