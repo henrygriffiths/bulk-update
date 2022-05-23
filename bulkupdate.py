@@ -16,6 +16,7 @@ with open(configfilename) as json_file:
 
 sleeptime = 5*60
 first = True
+waituntilmerged = False
 
 def run(args, returnoutput = False):
     while True:
@@ -136,6 +137,17 @@ for repository_dict in config['repositories']:
                     prs.append({'org': org, 'repo': repo, 'prnum': prnum})
             except:
                 pass
+            if waituntilmerged == True:
+                merged = False
+                while merged == False:
+                    try:
+                        time.sleep(60*1)
+                        r = requests.get('https://api.github.com/repos/{}/{}/pulls/{}'.format(org, repo, prnum), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
+                        merged = bool(r.json()['merged'])
+                        print('Merged', merged)
+                    except:
+                        print('Failure')
+                        pass
     if config['shallowclone'] == True and config['repoprune'] == True and config['existingbranch'] == True:
         run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
         run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
