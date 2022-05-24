@@ -21,10 +21,20 @@ waituntilmerged = False
 def run(args, returnoutput = False):
     while True:
         try:
-            sp = subprocess.run(args, text = True, check = True, capture_output = returnoutput)
-            if returnoutput:
-                print(sp.stdout)
-            return sp.stdout
+            for x in range(10):
+                if x <= 9:
+                    try:
+                        sp = subprocess.run(args, text = True, check = True, capture_output = returnoutput)
+                        if returnoutput:
+                            print(sp.stdout)
+                        return sp.stdout
+                    except:
+                        time.sleep(pow(x * 2, 2))
+                else:
+                    sp = subprocess.run(args, text = True, check = True, capture_output = returnoutput)
+                    if returnoutput:
+                        print(sp.stdout)
+                    return sp.stdout
         except:
             while True:
                 print('Running {} Failed.'.format(' '.join(args)))
