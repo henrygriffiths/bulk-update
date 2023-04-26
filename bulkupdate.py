@@ -142,12 +142,13 @@ for repository_dict in config['repositories']:
             try:
                 prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
                 if config['mergenow'] == True:
+                    if config['merge'] != 'skip':
+                        if 'review_user' in config and 'review_token' in config:
+                            requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
                     if config['merge'] == 'squash':
                         run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--admin'])
                     elif config['merge'] == 'autosquash':
                         run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
-                        if 'review_user' in config and 'review_token' in config:
-                            requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
                     elif config['merge'] == 'skip':
                         pass
                 else:
