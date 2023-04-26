@@ -14,6 +14,13 @@ else:
 with open(configfilename) as json_file:
     config = json.load(json_file)
 
+if 'secrets_file' in config:
+    with open(config['secrets_file']) as secrets_json_file:
+        secrets_config = json.load(secrets_json_file)
+        config['review_user'] = secrets_config['review_user'] if 'review_user' not in config else config['review_user']
+        config['review_token'] = secrets_config['review_token'] if 'review_token' not in config else config['review_token']
+
+
 sleeptime = 5*60
 first = True
 waituntilmerged = False
