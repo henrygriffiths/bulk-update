@@ -15,6 +15,5 @@
     "mergenow": true,
     "repoprune": true,
     "shallowclone": true,
-    "review_user": "",
-    "review_token": ""
+    "secrets_file": "secrets.json"
 }

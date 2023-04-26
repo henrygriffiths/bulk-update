@@ -10,3 +10,4 @@ repos/*
 !repos/.keep
 
 config*.json
+secrets*.json
