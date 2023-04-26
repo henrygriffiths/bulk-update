@@ -143,7 +143,7 @@ for repository_dict in config['repositories']:
                 prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
                 if config['mergenow'] == True:
                     if config['merge'] == 'squash':
-                        run(['gh', 'pr', 'merge', prnum, '-s', '-d'])
+                        run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--admin'])
                     elif config['merge'] == 'autosquash':
                         run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
                         if 'review_user' in config and 'review_token' in config:
