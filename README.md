@@ -52,8 +52,7 @@ The [example.config.json](example.config.json) file contains an example configur
       "pr_info": {
           "description": "This PR fixes example issue",
           "merge": "merge",
-          "mergenow": true,
-          "waituntilmerged": false,
+          "mergedelay": "none",
           "cleanup": true
       },
       "existingbranch": false,
@@ -95,10 +94,10 @@ The [example.config.json](example.config.json) file contains an example configur
       * `squash`: Squash merge the PR
       * `autosquash`: Enable auto-merge, squash merge when requirements are met
       * `skip`: Do not automatically merge the PR
-    + `mergenow` (required):
-      * `true`: Perform merge action after creating PR
-      * `false`: Wait until all PRs have been created, request user input, then perform merge action
-    + `waituntilmerged` (optional): Wait until the created PR has been merged before creating the next one
+    + `mergedelay` (required):
+      * `none`: Perform merge action after creating PR
+      * `wait`: Wait until the created PR has been merged before creating the next one
+      * `after`: Wait until all PRs have been created, request user input, then perform merge action
     + `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `existingbranch` (required):
     + `true`: Use an existing branch already on the remote repositories

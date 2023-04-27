@@ -108,13 +108,13 @@ def main():
                 prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
             try:
                 prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-                if config['pr_info']['mergenow'] == True:
+                if config['pr_info']['mergedelay'] in ['none', 'wait']:
                     merge(org, repo, prnum, config)
                 else:
                     prs.append({'org': org, 'repo': repo, 'prnum': prnum})
             except:
                 pass
-            if 'waituntilmerged' in config['pr_info'] and config['pr_info']['waituntilmerged'] == True:
+            if config['pr_info']['mergedelay'] == 'wait':
                 merged = False
                 while merged == False:
                     try:
@@ -131,7 +131,7 @@ def main():
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
         os.chdir('{}/../../'.format(os.getcwd()))
 
-    if config['pr_info']['mergenow'] == False and config['createpr'] == True:
+    if config['createpr'] == True and config['pr_info']['mergedelay'] == 'after':
         input('Press enter when ready to merge')
         for pr in prs:
             os.chdir('{}/{}/{}'.format(os.getcwd(), pr['org'], pr['repo']))
