@@ -79,7 +79,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `source_branch` (required): The branch of the repository off of which the script works
     + `version` (optional): If the file is set as versioned, the path under the files directory in which the file is located
     + `shallowclone` (optional): Whether or not to perform a shallow clone
-  * `dest_branch` (required): The branch on which the script will commit files
+  * `dest_branch` (required): The branch on which the script will commit files. Will be suffixed by the source branch name to differentiate when there are duplicate repositories with different source branches.
   * `msg` (required): The commit message and PR title
   * `description` (required if createpr is true): The PR description
   * `createpr` (required): Whether to create a PR
