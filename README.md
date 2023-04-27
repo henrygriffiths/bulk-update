@@ -81,7 +81,7 @@ The [example.config.json](example.config.json) file contains an example configur
   * `mergenow` (required if createpr is true):
     + `true`: Perform merge action after creating PR
     + `false`: Wait until all PRs have been created, request user input, then perform merge action
-  * `repoprune`: Whether or not to delete branches that no longer exist on the remotes of the remote repositories
+  * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
   * `shallowclone`: Whether or not to perform a shallow clone
   * `secrets_file`: The name of the secrets file
 

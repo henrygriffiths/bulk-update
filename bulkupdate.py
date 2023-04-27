@@ -166,7 +166,7 @@ for repository_dict in config['repositories']:
                     except:
                         print('Failure')
                         pass
-    if config['shallowclone'] == True and config['repoprune'] == True and config['existingbranch'] == True:
+    if config['shallowclone'] == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
         run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
         run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
     os.chdir('{}/../../'.format(os.getcwd()))
