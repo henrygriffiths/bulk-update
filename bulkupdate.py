@@ -21,8 +21,6 @@ if 'secrets_file' in config:
         config['review_token'] = secrets_config['review_token'] if 'review_token' not in config else config['review_token']
 
 
-first = True
-
 def run(args, returnoutput = False):
     while True:
         try:
@@ -55,7 +53,7 @@ def run(args, returnoutput = False):
 
 
 prs = []
-
+first = True
 os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
 for repository_dict in config['repositories']:
     if not first and 'sleeptime' in config:
