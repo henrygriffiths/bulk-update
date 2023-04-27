@@ -25,7 +25,7 @@ Bulk Update is a script that can automatically copy/update a series of files acr
 5. Run the `bulkupdate.py` python script. Optionally specify the config file to use, eg `python bulkupdate.py config.json`
 
 
-## Configuration:
+## Configuration
 
 The [example.config.json](example.config.json) file contains an example configuration as follows:
   ```json
