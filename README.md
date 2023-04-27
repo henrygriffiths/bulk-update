@@ -31,10 +31,20 @@ The [example.config.json](example.config.json) file contains an example configur
   ```json
   {
       "files": [
-          {"filedir": "dir", "filename": "test.txt", "action": "copy", "versioned": true}
+          {
+              "filedir": "dir",
+              "filename": "test.txt",
+              "action": "copy",
+              "versioned": true
+          }
       ],
       "repositories": [
-          {"repository": "org/example", "source_branch": "main", "version": "v1", "shallowclone": false}
+          {
+              "repository": "org/example",
+              "source_branch": "main",
+              "version": "v1",
+              "shallowclone": false
+          }
       ],
       "dest_branch": "feat/test",
       "msg": "feat: example",
