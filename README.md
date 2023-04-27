@@ -81,7 +81,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `shallowclone` (optional): Whether or not to perform a shallow clone
   * `dest_branch` (required): The branch on which the script will commit files
   * `msg` (required): The commit message and PR title
-  * `comment` (optional if createpr is true): The PR description
+  * `description` (optional if createpr is true): The PR description
   * `createpr` (required): Whether to create a PR
   * `existingbranch` (required):
     + `true`: Use an existing branch already on the remote repositories
