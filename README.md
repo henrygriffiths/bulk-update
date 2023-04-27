@@ -44,6 +44,7 @@ The [example.config.json](example.config.json) file contains an example configur
       "updatebranch": false,
       "merge": "merge",
       "mergenow": true,
+      "waituntilmerged": false,
       "repoprune": true,
       "shallowclone": true,
       "secrets_file": "secrets.json"
@@ -81,6 +82,7 @@ The [example.config.json](example.config.json) file contains an example configur
   * `mergenow` (required if createpr is true):
     + `true`: Perform merge action after creating PR
     + `false`: Wait until all PRs have been created, request user input, then perform merge action
+  * `waituntilmerged` (optional): Wait until the created PR has been merged before creating the next one
   * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
   * `shallowclone` (required): Whether or not to perform a shallow clone
   * `secrets_file` (optional): The name of the secrets file. The data in the secrets file can also be provided in this configuration. If not provided, the PR (if created) will not be automatically approved

@@ -23,7 +23,6 @@ if 'secrets_file' in config:
 
 sleeptime = 5*60
 first = True
-waituntilmerged = False
 
 def run(args, returnoutput = False):
     while True:
@@ -155,7 +154,7 @@ for repository_dict in config['repositories']:
                     prs.append({'org': org, 'repo': repo, 'prnum': prnum})
             except:
                 pass
-            if waituntilmerged == True:
+            if 'waituntilmerged' in config and config['waituntilmerged'] == True:
                 merged = False
                 while merged == False:
                     try:
