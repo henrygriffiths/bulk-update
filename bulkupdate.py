@@ -160,8 +160,9 @@ for repository_dict in config['repositories']:
                 while merged == False:
                     try:
                         time.sleep(60*1)
-                        r = requests.get('https://api.github.com/repos/{}/{}/pulls/{}'.format(org, repo, prnum), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
-                        merged = bool(r.json()['merged'])
+                        pr_state = json.loads(run(['gh', 'pr', 'view', prnum, '--json', 'state'], returnoutput = True))['state']
+                        if pr_state == 'MERGED':
+                            merged = True
                         print('Merged', merged)
                     except:
                         print('Failure')
