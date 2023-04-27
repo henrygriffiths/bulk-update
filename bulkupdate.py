@@ -43,11 +43,7 @@ def main():
         os.chdir('{}/{}'.format(os.getcwd(), org))
         if os.path.exists('{}/{}'.format(os.getcwd(), repo)):
             os.chdir('{}/{}'.format(os.getcwd(), repo))
-            # run(['git', 'clean', '-fd'])
             run(['git', 'reset', '--hard', 'HEAD'])
-            # run(['git', 'checkout', 'origin/{}'.format(source_branch)])
-            # run(['git', 'branch', '-D', source_branch])
-            # run(['git', 'checkout', '-b', source_branch])
         else:
             run(['rm', '-rf', repo])
             if shallowclone == True:
