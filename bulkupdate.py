@@ -142,7 +142,15 @@ def merge(org, repo, prnum, config):
         if config['merge'] != 'skip':
             if 'review_user' in config and 'review_token' in config:
                 requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
-        if config['merge'] == 'squash':
+        if config['merge'] == 'merge':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-m', '-d'])
+        elif config['merge'] == 'automerge':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-m', '-d', '--auto'])
+        elif config['merge'] == 'rebase':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-r', '-d'])
+        elif config['merge'] == 'autorebase':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-r', '-d', '--auto'])
+        elif config['merge'] == 'squash':
             run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d'])
         elif config['merge'] == 'autosquash':
             run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d', '--auto'])
