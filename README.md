@@ -65,7 +65,7 @@ The [example.config.json](example.config.json) file contains an example configur
   ```
   
   * `files` (required): array that stores information about the files the script is updating
-    + `filedir` (required): path to the file in the remote repositories (repositories which the script is updating)
+    + `filedir` (required): path to the file in the remote repositories (repositories which the script is updating). Leave blank for the root of the repository
     + `filename` (required): the full name of the file
     + `action` (required): 
       * `copy`: copy the file as-is to the remote repo
