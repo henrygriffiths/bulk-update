@@ -48,7 +48,7 @@ The [example.config.json](example.config.json) file contains an example configur
       ],
       "dest_branch": "feat/test",
       "msg": "feat: example",
-      "comment": "This PR fixes example issue",
+      "description": "This PR fixes example issue",
       "createpr": true,
       "existingbranch": false,
       "updatebranch": false,
