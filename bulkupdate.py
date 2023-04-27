@@ -6,6 +6,7 @@ import requests
 import sys
 import time
 
+
 if len(sys.argv) > 1:
     configfilename = sys.argv[1]
 else:
@@ -142,22 +143,23 @@ def merge(org, repo, prnum, config):
         if config['merge'] != 'skip':
             if 'review_user' in config and 'review_token' in config:
                 requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
+        prurl = 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum)
         if config['merge'] == 'merge':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-m', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-m', '-d'])
         elif config['merge'] == 'automerge':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-m', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-m', '-d', '--auto'])
         elif config['merge'] == 'rebase':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-r', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-r', '-d'])
         elif config['merge'] == 'autorebase':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-r', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-r', '-d', '--auto'])
         elif config['merge'] == 'squash':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-s', '-d'])
         elif config['merge'] == 'autosquash':
-            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-s', '-d', '--auto'])
         elif config['merge'] == 'skip':
             pass
     except:
-        print('Failure Merging https://github.com/{}/{}/pull/{}'.format(org, repo, prnum))
+        print('Failure Merging {}'.format(prurl))
 
 
 def run(args, returnoutput = False):
