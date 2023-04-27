@@ -102,7 +102,7 @@ def main():
         else:
             run(['git', 'push'])
         if config['createpr'] == True:
-            proptions = ['--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-R', repository, '-a', '@me',]
+            proptions = ['--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-R', repository]
             if config['pr_info']['merge'] == 'draft':
                 proptions += ['--draft']
             prnum = run(['gh', 'pr', 'create'] + proptions, returnoutput = True)
