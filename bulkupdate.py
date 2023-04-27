@@ -21,7 +21,6 @@ if 'secrets_file' in config:
         config['review_token'] = secrets_config['review_token'] if 'review_token' not in config else config['review_token']
 
 
-sleeptime = 5*60
 first = True
 
 def run(args, returnoutput = False):
@@ -59,9 +58,9 @@ prs = []
 
 os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
 for repository_dict in config['repositories']:
-    if not first:
+    if not first and 'sleeptime' in config:
         print('Sleeping')
-        time.sleep(sleeptime)
+        time.sleep(config['sleeptime'] * 60)
     else:
         first = False
     repository = repository_dict['repository']
