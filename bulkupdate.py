@@ -102,10 +102,10 @@ def main():
         else:
             run(['git', 'push'])
         if config['createpr'] == True:
+            proptions = ['--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-R', repository, '-a', '@me',]
             if config['pr_info']['merge'] == 'draft':
-                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
-            else:
-                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+                proptions += ['--draft']
+            prnum = run(['gh', 'pr', 'create'] + proptions, returnoutput = True)
             try:
                 prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
                 if config['pr_info']['mergedelay'] in ['none', 'wait']:
