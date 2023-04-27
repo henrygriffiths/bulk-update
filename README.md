@@ -77,6 +77,10 @@ The [example.config.json](example.config.json) file contains an example configur
   * `updatebranch` (required): Whether or not to update the `source_branch` with new changes on the `dest_branch`
   * `merge` (required if createpr is true):
     + `draft`: Create a PR in a draft state
+    + `merge`: Merge the PR with a merge commit
+    + `automerge`: Enable auto-merge, merge with a merge commit when requirements are met
+    + `rebase`: Rebase merge the PR
+    + `autorebase`: Enable auto-merge, rebase merge when requirements are met
     + `squash`: Squash merge the PR
     + `autosquash`: Enable auto-merge, squash merge when requirements are met
     + `skip`: Do not automatically merge the PR
