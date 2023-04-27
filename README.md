@@ -45,6 +45,7 @@ The [example.config.json](example.config.json) file contains an example configur
       "merge": "merge",
       "mergenow": true,
       "waituntilmerged": false,
+      "cleanup": true,
       "sleeptime": 0,
       "repoprune": true,
       "shallowclone": true,
@@ -88,6 +89,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `true`: Perform merge action after creating PR
     + `false`: Wait until all PRs have been created, request user input, then perform merge action
   * `waituntilmerged` (optional): Wait until the created PR has been merged before creating the next one
+  * `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `sleeptime` (optional): The amount of time (in minutes) to wait between actions on each repository
   * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
   * `shallowclone` (required): Whether or not to perform a shallow clone
