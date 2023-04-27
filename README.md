@@ -83,7 +83,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `false`: Wait until all PRs have been created, request user input, then perform merge action
   * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
   * `shallowclone` (required): Whether or not to perform a shallow clone
-  * `secrets_file`: The name of the secrets file
+  * `secrets_file` (optional): The name of the secrets file. The data in the secrets file can also be provided in this configuration. If not provided, the PR (if created) will not be automatically approved
 
 The [example.secrets.json](example.secrets.json) file contains an example configuration as follows:
   ```json
