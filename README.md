@@ -97,7 +97,8 @@ The [example.config.json](example.config.json) file contains an example configur
     + `mergedelay` (required):
       * `none`: Perform merge action after creating PR
       * `wait`: Wait until the created PR has been merged before creating the next one
-      * `after`: Wait until all PRs have been created, request user input, then perform merge action
+      * `after`: Wait until all PRs have been created, then perform merge action
+      * `afterinput`: Wait until all PRs have been created, request user input, then perform merge action
     + `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `existingbranch` (required):
     + `true`: Use an existing branch already on the remote repositories
