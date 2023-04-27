@@ -13,6 +13,7 @@
     "updatebranch": false,
     "merge": "merge",
     "mergenow": true,
+    "waituntilmerged": false,
     "repoprune": true,
     "shallowclone": true,
     "secrets_file": "secrets.json"
