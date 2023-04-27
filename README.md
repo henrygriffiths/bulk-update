@@ -50,11 +50,11 @@ The [example.config.json](example.config.json) file contains an example configur
       "msg": "feat: example",
       "createpr": true,
       "pr_info": {
-        "description": "This PR fixes example issue",
-        "merge": "merge",
-        "mergenow": true,
-        "waituntilmerged": false,
-        "cleanup": true
+          "description": "This PR fixes example issue",
+          "merge": "merge",
+          "mergenow": true,
+          "waituntilmerged": false,
+          "cleanup": true
       },
       "existingbranch": false,
       "updatebranch": false,
