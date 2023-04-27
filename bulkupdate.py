@@ -146,12 +146,13 @@ def main():
             repo = pr['repo']
             prnum = pr['prnum']
             try:
+                if config['merge'] != 'skip':
+                    if 'review_user' in config and 'review_token' in config:
+                        requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
                 if config['merge'] == 'squash':
                     run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d'])
                 elif config['merge'] == 'autosquash':
                     run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d', '--auto'])
-                    if 'review_user' in config and 'review_token' in config:
-                        requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
                 elif config['merge'] == 'skip':
                     pass
             except:
