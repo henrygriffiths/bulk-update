@@ -131,8 +131,9 @@ def main():
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
         os.chdir('{}/../../'.format(os.getcwd()))
 
-    if config['createpr'] == True and config['pr_info']['mergedelay'] == 'after':
-        input('Press enter when ready to merge')
+    if config['createpr'] == True and config['pr_info']['mergedelay'] in ['after', 'afterinput']:
+        if config['pr_info']['mergedelay'] == 'afterinput':
+            input('Press enter when ready to merge')
         for pr in prs:
             os.chdir('{}/{}/{}'.format(os.getcwd(), pr['org'], pr['repo']))
             merge(pr['org'], pr['repo'], pr['prnum'], config)
