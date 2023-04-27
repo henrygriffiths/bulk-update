@@ -37,6 +37,7 @@ def main():
         dest_branch = '{}-{}'.format(config['dest_branch'], source_branch)
         org = repository.split('/')[0]
         repo = repository.split('/')[1]
+        shallowclone = repository_dict['shallowclone'] if 'shallowclone' in repository_dict else False
         if not os.path.exists('{}/{}'.format(os.getcwd(), org)):
             os.makedirs('{}/{}'.format(os.getcwd(), org))
         os.chdir('{}/{}'.format(os.getcwd(), org))
@@ -49,12 +50,12 @@ def main():
             # run(['git', 'checkout', '-b', source_branch])
         else:
             run(['rm', '-rf', repo])
-            if config['shallowclone'] == True:
+            if shallowclone == True:
                 run(['git', 'clone', '--depth', '1', 'https://github.com/{}/{}.git'.format(org, repo)])
             else:
                 run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
             os.chdir('{}/{}'.format(os.getcwd(), repo))
-        if config['shallowclone'] == True and config['existingbranch'] == True:
+        if shallowclone == True and config['existingbranch'] == True:
             run(['git', 'config', '--add', 'remote.origin.fetch', '+refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
         if 'repoprune' in config and config['repoprune'] == True:
             run(['git', 'fetch', '--prune'])
@@ -126,7 +127,7 @@ def main():
                         except:
                             print('Failure')
                             pass
-        if config['shallowclone'] == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
+        if shallowclone == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
             run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
         os.chdir('{}/../../'.format(os.getcwd()))

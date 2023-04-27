@@ -34,7 +34,7 @@ The [example.config.json](example.config.json) file contains an example configur
           {"filedir": "dir", "filename": "test.txt", "action": "copy", "versioned": true}
       ],
       "repositories": [
-          {"repository": "org/example", "source_branch": "main", "version": "v1"}
+          {"repository": "org/example", "source_branch": "main", "version": "v1", "shallowclone": false}
       ],
       "dest_branch": "feat/test",
       "msg": "feat: example",
@@ -68,6 +68,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `repository` (required): The organization/user and repository name of the GitHub repository
     + `source_branch` (required): The branch of the repository off of which the script works
     + `version` (optional): If the file is set as versioned, the path under the files directory in which the file is located
+    + `shallowclone` (optional): Whether or not to perform a shallow clone
   * `dest_branch` (required): The branch on which the script will commit files
   * `msg` (required): The commit message and PR title
   * `comment` (optional if createpr is true): The PR description
@@ -92,7 +93,6 @@ The [example.config.json](example.config.json) file contains an example configur
   * `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `sleeptime` (optional): The amount of time (in minutes) to wait between actions on each repository
   * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
-  * `shallowclone` (required): Whether or not to perform a shallow clone
   * `secrets_file` (optional): The name of the secrets file. The data in the secrets file can also be provided in this configuration. If not provided, the PR (if created) will not be automatically approved
 
 The [example.secrets.json](example.secrets.json) file contains an example configuration as follows:

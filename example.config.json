@@ -3,7 +3,7 @@
         {"filedir": "dir", "filename": "test.txt", "action": "copy", "versioned": true}
     ],
     "repositories": [
-        {"repository": "org/example", "source_branch": "main", "version": "v1"}
+        {"repository": "org/example", "source_branch": "main", "version": "v1", "shallowclone": false}
     ],
     "dest_branch": "feat/test",
     "msg": "feat: example",
@@ -17,6 +17,5 @@
     "cleanup": true,
     "sleeptime": 0,
     "repoprune": true,
-    "shallowclone": true,
     "secrets_file": "secrets.json"
 }
