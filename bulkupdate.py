@@ -108,15 +108,7 @@ def main():
                 try:
                     prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
                     if config['mergenow'] == True:
-                        if config['merge'] != 'skip':
-                            if 'review_user' in config and 'review_token' in config:
-                                requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
-                        if config['merge'] == 'squash':
-                            run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--admin'])
-                        elif config['merge'] == 'autosquash':
-                            run(['gh', 'pr', 'merge', prnum, '-s', '-d', '--auto'])
-                        elif config['merge'] == 'skip':
-                            pass
+                        merge(org, repo, prnum, config)
                     else:
                         prs.append({'org': org, 'repo': repo, 'prnum': prnum})
                 except:
@@ -142,21 +134,22 @@ def main():
     if config['mergenow'] == False and config['createpr'] == True:
         input('Press enter when ready to merge')
         for pr in prs:
-            org = pr['org']
-            repo = pr['repo']
-            prnum = pr['prnum']
-            try:
-                if config['merge'] != 'skip':
-                    if 'review_user' in config and 'review_token' in config:
-                        requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
-                if config['merge'] == 'squash':
-                    run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d'])
-                elif config['merge'] == 'autosquash':
-                    run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d', '--auto'])
-                elif config['merge'] == 'skip':
-                    pass
-            except:
-                print('Failure Merging')
+            merge(pr['org'], pr['repo'], pr['prnum'], config)
+
+
+def merge(org, repo, prnum, config):
+    try:
+        if config['merge'] != 'skip':
+            if 'review_user' in config and 'review_token' in config:
+                requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
+        if config['merge'] == 'squash':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d'])
+        elif config['merge'] == 'autosquash':
+            run(['gh', 'pr', 'merge', 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum), '-s', '-d', '--auto'])
+        elif config['merge'] == 'skip':
+            pass
+    except:
+        print('Failure Merging https://github.com/{}/{}/pull/{}'.format(org, repo, prnum))
 
 
 def run(args, returnoutput = False):
