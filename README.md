@@ -48,14 +48,16 @@ The [example.config.json](example.config.json) file contains an example configur
       ],
       "dest_branch": "feat/test",
       "msg": "feat: example",
-      "description": "This PR fixes example issue",
       "createpr": true,
+      "pr_info": {
+        "description": "This PR fixes example issue",
+        "merge": "merge",
+        "mergenow": true,
+        "waituntilmerged": false,
+        "cleanup": true
+      },
       "existingbranch": false,
       "updatebranch": false,
-      "merge": "merge",
-      "mergenow": true,
-      "waituntilmerged": false,
-      "cleanup": true,
       "sleeptime": 0,
       "repoprune": true,
       "shallowclone": true,
@@ -81,26 +83,27 @@ The [example.config.json](example.config.json) file contains an example configur
     + `shallowclone` (optional): Whether or not to perform a shallow clone
   * `dest_branch` (required): The branch on which the script will commit files. Will be suffixed by the source branch name to differentiate when there are duplicate repositories with different source branches.
   * `msg` (required): The commit message and PR title
-  * `description` (required if createpr is true): The PR description
   * `createpr` (required): Whether to create a PR
+  * `pr_info` (required if createpr is true): Dict holding PR-specific info
+    + `description` (required): The PR description
+    + `merge` (required):
+      * `draft`: Create a PR in a draft state
+      * `merge`: Merge the PR with a merge commit
+      * `automerge`: Enable auto-merge, merge with a merge commit when requirements are met
+      * `rebase`: Rebase merge the PR
+      * `autorebase`: Enable auto-merge, rebase merge when requirements are met
+      * `squash`: Squash merge the PR
+      * `autosquash`: Enable auto-merge, squash merge when requirements are met
+      * `skip`: Do not automatically merge the PR
+    + `mergenow` (required):
+      * `true`: Perform merge action after creating PR
+      * `false`: Wait until all PRs have been created, request user input, then perform merge action
+    + `waituntilmerged` (optional): Wait until the created PR has been merged before creating the next one
+    + `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `existingbranch` (required):
     + `true`: Use an existing branch already on the remote repositories
     + `false`: Create a new branch on the remote repositories
   * `updatebranch` (required): Whether or not to update the `source_branch` with new changes on the `dest_branch`
-  * `merge` (required if createpr is true):
-    + `draft`: Create a PR in a draft state
-    + `merge`: Merge the PR with a merge commit
-    + `automerge`: Enable auto-merge, merge with a merge commit when requirements are met
-    + `rebase`: Rebase merge the PR
-    + `autorebase`: Enable auto-merge, rebase merge when requirements are met
-    + `squash`: Squash merge the PR
-    + `autosquash`: Enable auto-merge, squash merge when requirements are met
-    + `skip`: Do not automatically merge the PR
-  * `mergenow` (required if createpr is true):
-    + `true`: Perform merge action after creating PR
-    + `false`: Wait until all PRs have been created, request user input, then perform merge action
-  * `waituntilmerged` (optional): Wait until the created PR has been merged before creating the next one
-  * `cleanup` (optional): Whether or not to delete the PR's branch after merging
   * `sleeptime` (optional): The amount of time (in minutes) to wait between actions on each repository
   * `repoprune` (optional): Whether or not to delete branches that no longer exist on the remotes of the remote repositories
   * `secrets_file` (optional): The name of the secrets file. The data in the secrets file can also be provided in this configuration. If not provided, the PR (if created) will not be automatically approved

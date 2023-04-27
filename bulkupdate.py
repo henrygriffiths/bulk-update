@@ -103,19 +103,19 @@ def main():
             run(['git', 'push'])
         if config['createpr'] == True:
             if config['existingbranch'] == False:
-                if config['merge'] == 'draft':
-                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+                if config['pr_info']['merge'] == 'draft':
+                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
                 else:
-                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
                 try:
                     prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-                    if config['mergenow'] == True:
+                    if config['pr_info']['mergenow'] == True:
                         merge(org, repo, prnum, config)
                     else:
                         prs.append({'org': org, 'repo': repo, 'prnum': prnum})
                 except:
                     pass
-                if 'waituntilmerged' in config and config['waituntilmerged'] == True:
+                if 'waituntilmerged' in config['pr_info'] and config['pr_info']['waituntilmerged'] == True:
                     merged = False
                     while merged == False:
                         try:
@@ -132,7 +132,7 @@ def main():
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
         os.chdir('{}/../../'.format(os.getcwd()))
 
-    if config['mergenow'] == False and config['createpr'] == True:
+    if config['pr_info']['mergenow'] == False and config['createpr'] == True:
         input('Press enter when ready to merge')
         for pr in prs:
             os.chdir('{}/{}/{}'.format(os.getcwd(), pr['org'], pr['repo']))
@@ -143,24 +143,24 @@ def main():
 
 def merge(org, repo, prnum, config):
     try:
-        if config['merge'] != 'skip':
+        if config['pr_info']['merge'] != 'skip':
             if 'review_user' in config and 'review_token' in config:
                 requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
         prurl = 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum)
-        deleteflag = [] if 'cleanup' in config and config['cleanup'] == False else ['-d']
-        if config['merge'] == 'merge':
+        deleteflag = [] if 'cleanup' in config['pr_info'] and config['pr_info']['cleanup'] == False else ['-d']
+        if config['pr_info']['merge'] == 'merge':
             run(['gh', 'pr', 'merge', prurl, '-m'] + deleteflag)
-        elif config['merge'] == 'automerge':
+        elif config['pr_info']['merge'] == 'automerge':
             run(['gh', 'pr', 'merge', prurl, '-m', '--auto'] + deleteflag)
-        elif config['merge'] == 'rebase':
+        elif config['pr_info']['merge'] == 'rebase':
             run(['gh', 'pr', 'merge', prurl, '-r'] + deleteflag)
-        elif config['merge'] == 'autorebase':
+        elif config['pr_info']['merge'] == 'autorebase':
             run(['gh', 'pr', 'merge', prurl, '-r', '--auto'] + deleteflag)
-        elif config['merge'] == 'squash':
+        elif config['pr_info']['merge'] == 'squash':
             run(['gh', 'pr', 'merge', prurl, '-s'] + deleteflag)
-        elif config['merge'] == 'autosquash':
+        elif config['pr_info']['merge'] == 'autosquash':
             run(['gh', 'pr', 'merge', prurl, '-s', '--auto'] + deleteflag)
-        elif config['merge'] == 'skip':
+        elif config['pr_info']['merge'] == 'skip':
             pass
     except:
         print('Failure Merging {}'.format(prurl))
