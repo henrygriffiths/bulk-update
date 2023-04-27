@@ -17,14 +17,16 @@
     ],
     "dest_branch": "feat/test",
     "msg": "feat: example",
-    "description": "This PR fixes example issue",
     "createpr": true,
+    "pr_info": {
+        "description": "This PR fixes example issue",
+        "merge": "merge",
+        "mergenow": true,
+        "waituntilmerged": false,
+        "cleanup": true
+    },
     "existingbranch": false,
     "updatebranch": false,
-    "merge": "merge",
-    "mergenow": true,
-    "waituntilmerged": false,
-    "cleanup": true,
     "sleeptime": 0,
     "repoprune": true,
     "secrets_file": "secrets.json"
