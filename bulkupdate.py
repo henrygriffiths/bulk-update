@@ -130,12 +130,14 @@ def main():
             run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
         os.chdir('{}/../../'.format(os.getcwd()))
-    os.chdir('{}/../'.format(os.getcwd()))
 
     if config['mergenow'] == False and config['createpr'] == True:
         input('Press enter when ready to merge')
         for pr in prs:
+            os.chdir('{}/{}/{}'.format(os.getcwd(), pr['org'], pr['repo']))
             merge(pr['org'], pr['repo'], pr['prnum'], config)
+            os.chdir('{}/../../'.format(os.getcwd()))
+    os.chdir('{}/../'.format(os.getcwd()))
 
 
 def merge(org, repo, prnum, config):
