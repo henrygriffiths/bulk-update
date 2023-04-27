@@ -146,18 +146,19 @@ def merge(org, repo, prnum, config):
             if 'review_user' in config and 'review_token' in config:
                 requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
         prurl = 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum)
+        deleteflag = [] if 'cleanup' in config and config['cleanup'] == False else ['-d']
         if config['merge'] == 'merge':
-            run(['gh', 'pr', 'merge', prurl, '-m', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-m'] + deleteflag)
         elif config['merge'] == 'automerge':
-            run(['gh', 'pr', 'merge', prurl, '-m', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-m', '--auto'] + deleteflag)
         elif config['merge'] == 'rebase':
-            run(['gh', 'pr', 'merge', prurl, '-r', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-r'] + deleteflag)
         elif config['merge'] == 'autorebase':
-            run(['gh', 'pr', 'merge', prurl, '-r', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-r', '--auto'] + deleteflag)
         elif config['merge'] == 'squash':
-            run(['gh', 'pr', 'merge', prurl, '-s', '-d'])
+            run(['gh', 'pr', 'merge', prurl, '-s'] + deleteflag)
         elif config['merge'] == 'autosquash':
-            run(['gh', 'pr', 'merge', prurl, '-s', '-d', '--auto'])
+            run(['gh', 'pr', 'merge', prurl, '-s', '--auto'] + deleteflag)
         elif config['merge'] == 'skip':
             pass
     except:

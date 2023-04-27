@@ -14,6 +14,7 @@
     "merge": "merge",
     "mergenow": true,
     "waituntilmerged": false,
+    "cleanup": true,
     "sleeptime": 0,
     "repoprune": true,
     "shallowclone": true,
