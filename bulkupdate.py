@@ -102,31 +102,30 @@ def main():
         else:
             run(['git', 'push'])
         if config['createpr'] == True:
-            if config['existingbranch'] == False:
-                if config['pr_info']['merge'] == 'draft':
-                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            if config['pr_info']['merge'] == 'draft':
+                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '--draft', '-R', repository], returnoutput = True)
+            else:
+                prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
+            try:
+                prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
+                if config['pr_info']['mergenow'] == True:
+                    merge(org, repo, prnum, config)
                 else:
-                    prnum = run(['gh', 'pr', 'create', '--title', config['msg'], '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-a', '@me', '-R', repository], returnoutput = True)
-                try:
-                    prnum = prnum.split('https://github.com/')[1].split('/pull/')[1].strip()
-                    if config['pr_info']['mergenow'] == True:
-                        merge(org, repo, prnum, config)
-                    else:
-                        prs.append({'org': org, 'repo': repo, 'prnum': prnum})
-                except:
-                    pass
-                if 'waituntilmerged' in config['pr_info'] and config['pr_info']['waituntilmerged'] == True:
-                    merged = False
-                    while merged == False:
-                        try:
-                            time.sleep(60*1)
-                            pr_state = json.loads(run(['gh', 'pr', 'view', prnum, '--json', 'state'], returnoutput = True))['state']
-                            if pr_state == 'MERGED':
-                                merged = True
-                            print('Merged', merged)
-                        except:
-                            print('Failure')
-                            pass
+                    prs.append({'org': org, 'repo': repo, 'prnum': prnum})
+            except:
+                pass
+            if 'waituntilmerged' in config['pr_info'] and config['pr_info']['waituntilmerged'] == True:
+                merged = False
+                while merged == False:
+                    try:
+                        time.sleep(60*1)
+                        pr_state = json.loads(run(['gh', 'pr', 'view', prnum, '--json', 'state'], returnoutput = True))['state']
+                        if pr_state == 'MERGED':
+                            merged = True
+                        print('Merged', merged)
+                    except:
+                        print('Failure')
+                        pass
         if shallowclone == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
             run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
             run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
