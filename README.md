@@ -88,8 +88,8 @@ The [example.config.json](example.config.json) file contains an example configur
 The [example.secrets.json](example.secrets.json) file contains an example configuration as follows:
   ```json
   {
-      "review_user": "abc",
-      "review_token": "def"
+      "review_user": "",
+      "review_token": ""
   }
   ```
 
