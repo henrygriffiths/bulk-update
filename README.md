@@ -50,6 +50,7 @@ The [example.config.json](example.config.json) file contains an example configur
       "msg": "feat: example",
       "createpr": true,
       "pr_info": {
+          "title": "PR Title",
           "description": "This PR fixes example issue",
           "merge": "merge",
           "mergedelay": "none",
@@ -84,6 +85,7 @@ The [example.config.json](example.config.json) file contains an example configur
   * `msg` (required): The commit message and PR title
   * `createpr` (required): Whether to create a PR
   * `pr_info` (required if createpr is true): Dict holding PR-specific info
+    + `title` (optional): The PR title. Defaults to the commit message if empty
     + `description` (required): The PR description
     + `merge` (required):
       * `draft`: Create a PR in a draft state

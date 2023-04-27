@@ -19,6 +19,7 @@
     "msg": "feat: example",
     "createpr": true,
     "pr_info": {
+        "title": "PR Title",
         "description": "This PR fixes example issue",
         "merge": "merge",
         "mergedelay": "none",
