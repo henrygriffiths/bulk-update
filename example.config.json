@@ -16,6 +16,7 @@
         }
     ],
     "dest_branch": "feat/test",
+    "force_branch_suffix": false,
     "msg": "feat: example",
     "createpr": true,
     "pr_info": {
