@@ -47,6 +47,7 @@ The [example.config.json](example.config.json) file contains an example configur
           }
       ],
       "dest_branch": "feat/test",
+      "force_branch_suffix": false,
       "msg": "feat: example",
       "createpr": true,
       "pr_info": {
@@ -82,6 +83,7 @@ The [example.config.json](example.config.json) file contains an example configur
     + `version` (optional): If the file is set as versioned, the path under the files directory in which the file is located
     + `shallowclone` (optional): Whether or not to perform a shallow clone
   * `dest_branch` (required): The branch on which the script will commit files. Will be suffixed by the source branch name to differentiate when there are duplicate repositories with different source branches.
+  * `force_branch_suffix` (optional): If enabled, will always suffix the destination branch with the source branch name.
   * `msg` (required): The commit message and PR title
   * `createpr` (required): Whether to create a PR
   * `pr_info` (required if createpr is true): Dict holding PR-specific info

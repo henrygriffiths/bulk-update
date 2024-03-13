@@ -28,7 +28,9 @@ def main():
     repopath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'repos')
     filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'files')
     os.chdir(repopath)
-    for repository_dict in config['repositories']:
+    repo_count = [repo_info['repository'] for repo_info in config['repositories']]
+    repositories = [{**repo_info, 'count': repo_count.count(repo_info['repository'])} for repo_info in config['repositories']]
+    for repository_dict in repositories:
         if not first and 'sleeptime' in config:
             print('Sleeping')
             time.sleep(config['sleeptime'] * 60)
@@ -36,7 +38,10 @@ def main():
             first = False
         repository = repository_dict['repository']
         source_branch = repository_dict['source_branch']
-        dest_branch = f"{config['dest_branch']}-{source_branch}"
+        if ('force_branch_suffix' in config and config['force_branch_suffix'] is True) or repository_dict['count'] > 1:
+            dest_branch = f"{config['dest_branch']}-{source_branch}"
+        else:
+            dest_branch = config['dest_branch']
         org = repository.split('/')[0]
         repo = repository.split('/')[1]
         shallowclone = repository_dict['shallowclone'] if 'shallowclone' in repository_dict else False
