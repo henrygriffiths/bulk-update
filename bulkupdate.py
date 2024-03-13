@@ -12,11 +12,11 @@ if len(sys.argv) > 1:
 else:
     configfilename = 'config.json'
 
-with open(configfilename) as json_file:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), configfilename)) as json_file:
     config = json.load(json_file)
 
 if 'secrets_file' in config:
-    with open(config['secrets_file']) as secrets_json_file:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), config['secrets_file'])) as secrets_json_file:
         secrets_config = json.load(secrets_json_file)
         config['review_user'] = secrets_config['review_user'] if 'review_user' not in config else config['review_user']
         config['review_token'] = secrets_config['review_token'] if 'review_token' not in config else config['review_token']
@@ -25,7 +25,9 @@ if 'secrets_file' in config:
 def main():
     prs = []
     first = True
-    os.chdir(f"{os.getcwd()}/{'repos'}")
+    repopath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'repos')
+    filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'files')
+    os.chdir(repopath)
     for repository_dict in config['repositories']:
         if not first and 'sleeptime' in config:
             print('Sleeping')
@@ -38,19 +40,18 @@ def main():
         org = repository.split('/')[0]
         repo = repository.split('/')[1]
         shallowclone = repository_dict['shallowclone'] if 'shallowclone' in repository_dict else False
-        if not os.path.exists(f"{os.getcwd()}/{org}"):
-            os.makedirs(f"{os.getcwd()}/{org}")
-        os.chdir(f"{os.getcwd()}/{org}")
-        if os.path.exists(f"{os.getcwd()}/{repo}"):
-            os.chdir(f"{os.getcwd()}/{repo}")
+        if not os.path.exists(os.path.join(repopath, org)):
+            os.makedirs(os.path.join(repopath, org))
+        if os.path.exists(os.path.join(repopath, org, repo)):
+            os.chdir(os.path.join(repopath, org, repo))
             run(['git', 'reset', '--hard', 'HEAD'])
         else:
-            run(['rm', '-rf', repo])
+            os.chdir(os.path.join(repopath, org))
             if shallowclone == True:
                 run(['git', 'clone', '--depth', '1', f"https://github.com/{org}/{repo}.git"])
             else:
                 run(['git', 'clone', f"https://github.com/{org}/{repo}.git"])
-            os.chdir(f"{os.getcwd()}/{repo}")
+            os.chdir(os.path.join(repopath, org, repo))
         if shallowclone == True and config['existingbranch'] == True:
             run(['git', 'config', '--add', 'remote.origin.fetch', f"+refs/heads/{dest_branch}:refs/remotes/origin/{dest_branch}"])
         if 'repoprune' in config and config['repoprune'] == True:
@@ -67,15 +68,14 @@ def main():
             if config['updatebranch'] == True:
                 run(['git', 'merge', source_branch, '-S', '-m', f"Merge branch {source_branch} into {dest_branch}"])
         for f in config['files']:
-            f['filedir'] = f['filedir'].rstrip('/')
             if f['versioned'] and 'version' in  repository_dict:
-                local_filepath = f"../../../files/{repository_dict['version']}/{f['filename']}"
+                local_filepath = os.path.join(filepath, repository_dict['version'], f['filename'])
             else:
-                local_filepath = f"../../../files/{f['filename']}"
-            remote_filepath = f"{f['filedir']}/{f['filename']}"
+                local_filepath = os.path.join(filepath, f['filename'])
+            remote_filepath = os.path.join(repopath, org, repo, f['filedir'], f['filename'])
             if f['action'] == 'copy':
-                if not os.path.exists(f"{os.getcwd()}/{f['filedir']}"):
-                    os.makedirs(f"{os.getcwd()}/{f['filedir']}")
+                if not os.path.exists(os.path.join(repopath, org, repo, f['filedir'])):
+                    os.makedirs(os.path.join(repopath, org, repo, f['filedir']))
                 shutil.copyfile(local_filepath, remote_filepath)
             elif f['action'] == 'remove':
                 run(['rm', '-rf', remote_filepath])
@@ -126,16 +126,16 @@ def main():
         if shallowclone == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
             run(['git', 'config', '--unset', 'remote.origin.fetch', f"refs/heads/{dest_branch}:refs/remotes/origin/{dest_branch}"])
             run(['git', 'branch', '-d', '-r', f"origin/{dest_branch}"])
-        os.chdir(f"{os.getcwd()}/../../")
+        os.chdir(repopath)
 
     if config['createpr'] == True and config['pr_info']['mergedelay'] in ['after', 'afterinput']:
         if config['pr_info']['mergedelay'] == 'afterinput':
             input('Press enter when ready to merge')
         for pr in prs:
-            os.chdir(f"{os.getcwd()}/{pr['org']}/{pr['repo']}")
+            os.chdir(os.path.join(repopath, pr['org'], pr['repo']))
             merge(pr['org'], pr['repo'], pr['prnum'], config)
-            os.chdir(f"{os.getcwd()}/../../")
-    os.chdir(f"{os.getcwd()}/../")
+            os.chdir(repopath)
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 
 def merge(org, repo, prnum, config):
