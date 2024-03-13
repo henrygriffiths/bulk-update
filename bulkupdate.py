@@ -25,7 +25,7 @@ if 'secrets_file' in config:
 def main():
     prs = []
     first = True
-    os.chdir('{}/{}'.format(os.getcwd(), 'repos'))
+    os.chdir(f"{os.getcwd()}/{'repos'}")
     for repository_dict in config['repositories']:
         if not first and 'sleeptime' in config:
             print('Sleeping')
@@ -34,25 +34,25 @@ def main():
             first = False
         repository = repository_dict['repository']
         source_branch = repository_dict['source_branch']
-        dest_branch = '{}-{}'.format(config['dest_branch'], source_branch)
+        dest_branch = f"{config['dest_branch']}-{source_branch}"
         org = repository.split('/')[0]
         repo = repository.split('/')[1]
         shallowclone = repository_dict['shallowclone'] if 'shallowclone' in repository_dict else False
-        if not os.path.exists('{}/{}'.format(os.getcwd(), org)):
-            os.makedirs('{}/{}'.format(os.getcwd(), org))
-        os.chdir('{}/{}'.format(os.getcwd(), org))
-        if os.path.exists('{}/{}'.format(os.getcwd(), repo)):
-            os.chdir('{}/{}'.format(os.getcwd(), repo))
+        if not os.path.exists(f"{os.getcwd()}/{org}"):
+            os.makedirs(f"{os.getcwd()}/{org}")
+        os.chdir(f"{os.getcwd()}/{org}")
+        if os.path.exists(f"{os.getcwd()}/{repo}"):
+            os.chdir(f"{os.getcwd()}/{repo}")
             run(['git', 'reset', '--hard', 'HEAD'])
         else:
             run(['rm', '-rf', repo])
             if shallowclone == True:
-                run(['git', 'clone', '--depth', '1', 'https://github.com/{}/{}.git'.format(org, repo)])
+                run(['git', 'clone', '--depth', '1', f"https://github.com/{org}/{repo}.git"])
             else:
-                run(['git', 'clone', 'https://github.com/{}/{}.git'.format(org, repo)])
-            os.chdir('{}/{}'.format(os.getcwd(), repo))
+                run(['git', 'clone', f"https://github.com/{org}/{repo}.git"])
+            os.chdir(f"{os.getcwd()}/{repo}")
         if shallowclone == True and config['existingbranch'] == True:
-            run(['git', 'config', '--add', 'remote.origin.fetch', '+refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
+            run(['git', 'config', '--add', 'remote.origin.fetch', f"+refs/heads/{dest_branch}:refs/remotes/origin/{dest_branch}"])
         if 'repoprune' in config and config['repoprune'] == True:
             run(['git', 'fetch', '--prune'])
         else:
@@ -65,17 +65,17 @@ def main():
             run(['git', 'checkout', dest_branch])
             run(['git', 'pull'])
             if config['updatebranch'] == True:
-                run(['git', 'merge', source_branch, '-S', '-m', 'Merge branch \'{}\' into {}'.format(source_branch, dest_branch)])
+                run(['git', 'merge', source_branch, '-S', '-m', f"Merge branch {source_branch} into {dest_branch}"])
         for f in config['files']:
             f['filedir'] = f['filedir'].rstrip('/')
             if f['versioned'] and 'version' in  repository_dict:
-                local_filepath = '../../../files/{}/{}'.format(repository_dict['version'], f['filename'])
+                local_filepath = f"../../../files/{repository_dict['version']}/{f['filename']}"
             else:
-                local_filepath = '../../../files/{}'.format(f['filename'])
-            remote_filepath = '{}/{}'.format(f['filedir'], f['filename'])
+                local_filepath = f"../../../files/{f['filename']}"
+            remote_filepath = f"{f['filedir']}/{f['filename']}"
             if f['action'] == 'copy':
-                if not os.path.exists('{}/{}'.format(os.getcwd(), f['filedir'])):
-                    os.makedirs('{}/{}'.format(os.getcwd(), f['filedir']))
+                if not os.path.exists(f"{os.getcwd()}/{f['filedir']}"):
+                    os.makedirs(f"{os.getcwd()}/{f['filedir']}")
                 shutil.copyfile(local_filepath, remote_filepath)
             elif f['action'] == 'remove':
                 run(['rm', '-rf', remote_filepath])
@@ -84,22 +84,22 @@ def main():
                     shutil.copyfile(remote_filepath, local_filepath)
                 except:
                     print('FAILED TO COPY FILE - DOES NOT EXIST')
-                input('Hit Enter when done editing {} '.format(f['filename']))
+                input(f"Hit Enter when done editing {f['filename']} ")
                 shutil.copyfile(local_filepath, remote_filepath)
             elif f['action'] == 'reset':
-                run(['git', 'checkout', 'origin/{}'.format(source_branch), remote_filepath])
+                run(['git', 'checkout', f"origin/{source_branch}", remote_filepath])
             run(['git', 'add', remote_filepath])
         if config['existingbranch'] == False:
-            run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify'])
+            run(['git', 'commit', '-S', '-m', config['msg'], '--no-verify'])
         else:
-            run(['git', 'commit', '-S', '-m', '{}'.format(config['msg']), '--no-verify', '--allow-empty'])
+            run(['git', 'commit', '-S', '-m', config['msg'], '--no-verify', '--allow-empty'])
         if config['existingbranch'] == False:
             run(['git', 'push', '--set-upstream', 'origin', dest_branch])
         else:
             run(['git', 'push'])
         if config['createpr'] == True:
             prtitle = config['pr_info']['title'] if 'title' in config['pr_info'] and config['pr_info']['title'] != '' else config['msg']
-            proptions = ['--title', prtitle, '--body', '{}\n\nCreated by henrygriffiths/bulk-update'.format(config['pr_info']['description']), '-H', dest_branch, '-B', source_branch, '-R', repository]
+            proptions = ['--title', prtitle, '--body', f"{config['pr_info']['description']}\n\nCreated by henrygriffiths/bulk-update", '-H', dest_branch, '-B', source_branch, '-R', repository]
             if config['pr_info']['merge'] == 'draft':
                 proptions += ['--draft']
             prnum = run(['gh', 'pr', 'create'] + proptions, returnoutput = True)
@@ -124,26 +124,26 @@ def main():
                         print('Failure')
                         pass
         if shallowclone == True and ('repoprune' in config and config['repoprune'] == True) and config['existingbranch'] == True:
-            run(['git', 'config', '--unset', 'remote.origin.fetch', 'refs/heads/{}:refs/remotes/origin/{}'.format(dest_branch, dest_branch)])
-            run(['git', 'branch', '-d', '-r', 'origin/{}'.format(dest_branch)])
-        os.chdir('{}/../../'.format(os.getcwd()))
+            run(['git', 'config', '--unset', 'remote.origin.fetch', f"refs/heads/{dest_branch}:refs/remotes/origin/{dest_branch}"])
+            run(['git', 'branch', '-d', '-r', f"origin/{dest_branch}"])
+        os.chdir(f"{os.getcwd()}/../../")
 
     if config['createpr'] == True and config['pr_info']['mergedelay'] in ['after', 'afterinput']:
         if config['pr_info']['mergedelay'] == 'afterinput':
             input('Press enter when ready to merge')
         for pr in prs:
-            os.chdir('{}/{}/{}'.format(os.getcwd(), pr['org'], pr['repo']))
+            os.chdir(f"{os.getcwd()}/{pr['org']}/{pr['repo']}")
             merge(pr['org'], pr['repo'], pr['prnum'], config)
-            os.chdir('{}/../../'.format(os.getcwd()))
-    os.chdir('{}/../'.format(os.getcwd()))
+            os.chdir(f"{os.getcwd()}/../../")
+    os.chdir(f"{os.getcwd()}/../")
 
 
 def merge(org, repo, prnum, config):
     try:
         if config['pr_info']['merge'] != 'skip':
             if 'review_user' in config and 'review_token' in config:
-                requests.post('https://api.github.com/repos/{}/{}/pulls/{}/reviews'.format(org, repo, prnum), data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
-        prurl = 'https://github.com/{}/{}/pull/{}'.format(org, repo, prnum)
+                requests.post(f"https://api.github.com/repos/{org}/{repo}/pulls/{prnum}/reviews", data = json.dumps({'event': 'APPROVE'}), headers = {'Accept': 'application/vnd.github.v3+json'}, auth = (config['review_user'], config['review_token']))
+        prurl = f"https://github.com/{org}/{repo}/pull/{prnum}"
         deleteflag = [] if 'cleanup' in config['pr_info'] and config['pr_info']['cleanup'] == False else ['-d']
         if config['pr_info']['merge'] == 'merge':
             run(['gh', 'pr', 'merge', prurl, '-m'] + deleteflag)
@@ -160,7 +160,7 @@ def merge(org, repo, prnum, config):
         elif config['pr_info']['merge'] == 'skip':
             pass
     except:
-        print('Failure Merging {}'.format(prurl))
+        print(f"Failure Merging {prurl}")
 
 
 def run(args, returnoutput = False):
@@ -182,7 +182,7 @@ def run(args, returnoutput = False):
                     return sp.stdout
         except:
             while True:
-                print('Running {} Failed.'.format(' '.join(args)))
+                print(f"Running {' '.join(args)} Failed.")
                 result = input('(R)etry or (C)ontinue? : ')
                 if result.lower() == 'r':
                     break
